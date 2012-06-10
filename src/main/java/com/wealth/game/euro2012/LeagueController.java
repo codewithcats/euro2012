@@ -45,7 +45,7 @@ public class LeagueController {
 		for(Match match: matches) {
 			List<User> copy = new LinkedList<User>(users);
 			int loopCount = copy.size()/2;
-			for(int i=0;i<loopCount;i+=2) {
+			for(int i=0;i<loopCount;i++) {
 				int pickIndex = rand.nextInt(copy.size());
 				User playerOne = copy.remove(pickIndex);
 				pickIndex = rand.nextInt(copy.size());

@@ -18,6 +18,45 @@ $(function() {
 		}
 	});
 	
+	var PlayerMatchTableView = Backbone.View.extend({
+		el: '#player-match-table',
+		rowTpl: _.template($('#tpl-player-match-row').html()),
+		initialize: function() {
+			this.collection.on('reset', this.render, this);
+		},
+		events: {
+			'click a.matching-trigger': 'match'
+		},
+		match: function(e) {
+			e.preventDefault();
+			$.ajax('../league/matching', {
+				type: 'POST',
+				data: {
+					roundId: this.collection.roundId
+				},
+				dataType: 'json',
+				context: this,
+				success: function(data) {
+					if(data.success) {
+						alert('completed!');
+						return;
+					}
+					alert('error!');
+				}
+			});
+		},
+		render: function() {
+			this.$el.find('table').empty();
+			if(this.collection.size() <= 0) {
+				this.$el.prepend("<h3>This round doesn't matching yet</h3><a class=\"matching-trigger\" href=\"#\">click to matching</a>");
+				return;
+			}
+			this.collection.each(function(m) {
+				this.$el.find('table').append(this.rowTpl(m.toJSON()));
+			}, this);
+		}
+	});
+	
 	var RoundListView = Backbone.View.extend({
 		el: '#rounds-list',
 		itemTpl: _.template($('#tpl-round-item').html()),
@@ -185,6 +224,9 @@ $(function() {
 			this.roundCollection.fetch();
 			
 			this.playerMatchCollection = new PlayerMatchCollection;
+			this.playerMatchTableView = new PlayerMatchTableView({
+				collection: this.playerMatchCollection
+			});
 			
 			this.roundFormView = new RoundFormView;
 			this.teamFormView = new TeamFormView;

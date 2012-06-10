@@ -60,6 +60,9 @@
     		<ul id="rounds-list" class="span4 nav nav-list well">
     			<li class="nav-header">Rounds</li>
     		</ul>
+    		<div id="player-match-table" class="span7">
+    			<table class="table"></table>
+    		</div>
     	</div>
     	<div class="row">
     		<form id="round-form" class="span6">
@@ -89,6 +92,12 @@
     	</div>
     	
     </div> <!-- /container -->
+    <script type="text/template" id="tpl-player-match-row">
+		<tr>
+    		<td>{{match.home.name}} - {{match.away.name}}</td>
+    		<td>{{playerOne.username}} vs {{playerTwo.username}}</td>
+    	</tr>
+	</script>
     <script type="text/template" id="tpl-round-item">
 		<li><a id="{{id}}" href="#">{{name}}</a></li>
 	</script>
