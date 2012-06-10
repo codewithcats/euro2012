@@ -1,0 +1,15 @@
+#reg {
+	display: none;
+}
+#signin {
+	display: none;
+}
+#signin-fail {
+	display: none;
+}
+#dashboard {
+	display: none;
+}
+#user-info {
+	border-bottom: 1px solid #DDD;
+}
