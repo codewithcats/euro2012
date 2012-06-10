@@ -46,11 +46,12 @@ $(function() {
 			});
 		},
 		render: function() {
-			this.$el.find('table').empty();
+			this.$el.empty();
 			if(this.collection.size() <= 0) {
 				this.$el.prepend("<h3>This round doesn't matching yet</h3><a class=\"matching-trigger\" href=\"#\">click to matching</a>");
 				return;
 			}
+			this.$el.append('<table class="table"></table>');
 			this.collection.each(function(m) {
 				this.$el.find('table').append(this.rowTpl(m.toJSON()));
 			}, this);
