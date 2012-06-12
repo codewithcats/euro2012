@@ -8,11 +8,13 @@ import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.wealth.game.euro2012.data.Match;
 import com.wealth.game.euro2012.data.PlayerMatch;
@@ -64,4 +66,12 @@ public class LeagueController {
 		json.addProperty("success", true);
 		return json.toString();
 	}
+	
+	@RequestMapping(value="/league/players/{id}/matches.json", method=RequestMethod.GET)
+	@ResponseBody
+	public String getPlayerMatches(@PathVariable String id) {
+		List<PlayerMatch> matches = this.playerMatchRepository.findByPlayer(id);
+		return (new Gson()).toJson(matches);
+	}
+
 }

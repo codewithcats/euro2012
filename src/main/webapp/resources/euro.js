@@ -3,10 +3,7 @@ $(function() {
 	var User = Backbone.Model.extend({
 		
 	});
-	
-	_.templateSettings = {
-	    interpolate: /\{\{(.+?)\}\}/g
-	};
+
 	var alertTpl = _.template($('#tpl-alert').html());
 	var RegisterView = Backbone.View.extend({
 		el: '#reg',
@@ -39,6 +36,7 @@ $(function() {
 					}
 					if(data.usernameDuplicate) {
 						this.$el.append(alertTpl({
+							clazz: '',
 							title: 'Too Late!',
 							msg: 'Someone already pick this username, try another please.'
 						}));
@@ -109,18 +107,7 @@ $(function() {
 		},
 		render: function() {
 			this.$el.find('#user-info').html(this.userInfoTpl(this.model.toJSON()));
-			this.renderRound();
 			return this;
-		},
-		renderRound: function() {
-			$.ajax('rounds/active.json', {
-				context: this,
-				type: 'GET',
-				dataType: 'json',
-				success: function(round) {
-					console.log(round);
-				}
-			});
 		},
 		hide: function() {
 			this.$el.hide(0);
@@ -145,6 +132,7 @@ $(function() {
 	var AppRouter = Backbone.Router.extend({
 		initialize: function() {
 			this.user = new User;
+			
 			this.registerView = new RegisterView;
 			this.registerView.on('success:register', function(user) {
 				this.user.set(user);
@@ -166,10 +154,16 @@ $(function() {
 			this.dashboardView.on('logout', function() {
 				this.navigate('signin', {trigger: true});
 			}, this);
+			
+			this.playerMatchCollection = new PlayerMatchCollection;
+			this.playerMatchCollection.user = this.user;
+			this.playerMatchListView = new PlayerMatchListView({
+				collection: this.playerMatchCollection
+			});
 		},
 		routes: {
 			'': 'dashboard',
-			'register': 'register',
+			//'register': 'register',
 			'signin': 'signIn',
 			'dashboard': 'dashboard'
 		},
@@ -180,6 +174,7 @@ $(function() {
 				this.getCurrentUser();
 			} else {
 				this.dashboardView.show();
+				this.playerMatchCollection.fetch();
 			}
 		},
 		getCurrentUser: function() {

@@ -1,7 +1,5 @@
 package com.wealth.game.euro2012.data;
 
-import java.math.BigInteger;
-
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -10,7 +8,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class User {
 
 	@Id
-	private BigInteger id;
+	private String id;
 	@Indexed
 	private String username;
 	@Indexed
@@ -18,10 +16,10 @@ public class User {
 	@Indexed
 	private int leaguePoints;
 	
-	public BigInteger getId() {
+	public String getId() {
 		return id;
 	}
-	public void setId(BigInteger id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 	public String getUsername() {

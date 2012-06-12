@@ -56,22 +56,28 @@
     </div>
 
     <div class="container">
-		<div id="reg" class="row">
-			<h2 class="span4 offset4">One step away from the battle!</h2>
-			<form class="well span4 offset4">
-				<label>Username</label>
-				<input type="text" name="username" />
-				<label>Password</label>
-				<input type="password" name="password" style="display:block;" />
-				<button type="submit" class="btn btn-primary">
-					<i class="icon icon-ok icon-white"></i>
-					&nbsp;Register
-				</button>
-			</form>
+		<div id="reg">
+			<div class="row">
+				<div class="span2 offset3" style="text-align:right;">
+					<img src="resources/images/cup.png"/>
+				</div>
+				<form class="span4">
+					<label>Username</label>
+					<input type="text" name="username" />
+					<label>Password</label>
+					<input type="password" name="password" style="display:block;" />
+					<button type="submit" class="btn btn-primary">
+						<i class="icon icon-ok icon-white"></i>
+						&nbsp;Register
+					</button>
+				</form>
+			</div>
 		</div>
 		<div id="signin" class="row">
-			<h2 class="span4 offset4">Sign in to your field.</h2>
-			<form class="well span4 offset4">
+			<div class="span2 offset3" style="text-align:right;">
+				<img src="resources/images/cup.png"/>
+			</div>
+			<form class="span4">
 				<label>Username</label>
 				<input type="text" name="username" />
 				<label>Password</label>
@@ -80,10 +86,12 @@
 					<i class="icon icon-lock icon-white"></i>
 					&nbsp;Sign In
 				</button>
+				<!-- 
 				<button class="btn reg-trigger">
 					<i class="icon icon-user"></i>
 					&nbsp;Register
 				</button>
+				-->
 			</form>
 			<div id="signin-fail" class="span4 offset4 alert">
 				<button class="close" data-dismiss="alert">×</button>
@@ -91,10 +99,11 @@
   				<p>Check your username, password, then try again.</p>
 			</div>
 		</div>
-		<div id="dashboard" class="row">
-			<div id="user-info"></div>
-			<div id="round">
-				<h2></h2>
+		<div id="dashboard">
+			<div id="user-info" class="page-header">
+			</div>
+			<div id="player-matches">
+				
 			</div>
 		</div>
     </div> <!-- /container -->
@@ -104,15 +113,55 @@
 		{{name}}
 	</script>
     <script type="text/template" id="tpl-alert">
-		<div class="span4 offset4 alert">
+		<div class="span4 offset4 alert {{clazz}}">
 			<button class="close" data-dismiss="alert">×</button>
 			<h4 class="alert-heading">{{title}}</h4>
   			<p>{{msg}}</p>
 		</div>
 	</script>
+	<script type="text/template" id="tpl-alert-match">
+		<div class="alert {{clazz}}">
+			<button class="close" data-dismiss="alert">×</button>
+			<strong>{{title}}<strong>{{msg}}
+		</div>
+	</script>
 	<script type="text/template" id="tpl-user-info">
-		<h3>{{username}} <a rel="tooltip" class="signout-trigger" title="click to sign out" href="#"><i class="icon icon-off"></i></a></h3>
-		<p><strong class="points">{{leaguePoints}}</strong> points</p>
+		<h1>{{username}}, {{leaguePoints}}pts
+			<small class="points"><span>(<a class="signout-trigger" title="click to sign out" href="#">sign out</a>)</span></small>
+		</h1>
+	</script>
+	<script type="text/template" id="tpl-match-row">
+			<div class="row">
+				<h3 class="span3"><span class="badge">{{index}}</span> {{match.home.name}} vs {{match.away.name}}</h3>
+				<h3 class="span9"><span class="label label-important">opponent</span> {{opponent.username}} ({{opponent.leaguePoints}} points)</h3>
+				<p class="span12">{{round.name}}</p>
+			</div>
+			<div class="row">
+				<div class="span11 offset1">
+					<h3 class="span2 home"><img src="resources/images/flags/{{match.home.icon}}"/>&nbsp;{{match.home.name}}</h3>
+					<div class="span3 player-picks">
+						<form class="form-inline">
+							<label>HT</label>&nbsp;<input type="text" class="input-score" name="homeScoreHt"/> - <input type="text" class="input-score" name="awayScoreHt"/>
+							<span class="badge badge-warning">20P</span>&nbsp;<span class="badge badge-success">40P</span>
+						</form>
+						<form class="form-inline">
+							<label>FT</label>&nbsp;<input type="text" class="input-score" name="homeScoreFt"/> - <input type="text" class="input-score" name="awayScoreFt"/>
+							<span class="badge badge-warning">20P</span>&nbsp;<span class="badge badge-success">40P</span>
+						</form>
+						<form>
+							<label class="checkbox"><input type="checkbox" name="fiveYCards" />&nbsp;Yellow Card > 5 <span class="label label-inverse">10P</span>&nbsp;<span class="label label-info">10P</span></label>
+							<label class="checkbox"><input type="checkbox" name="redCard" />&nbsp;Red Card <span class="label label-inverse">10P</span>&nbsp;<span class="label label-info">30P</span></label>
+							<label class="checkbox"><input type="checkbox" name="og" />&nbsp;Own Goal <span class="label label-inverse">10P</span>&nbsp;<span class="label label-info">30P</span></label>
+							<label class="checkbox"><input type="checkbox" name="hattrick" />&nbsp;Hattrick <span class="label label-inverse">10P</span>&nbsp;<span class="label label-info">50P</span></label>
+						</form>
+						<div class="form-actions">
+							<span class="last-update">{{lastUpdateTag}}</span>
+							<button class="btn btn-primary save-trigger"><i class="icon icon-ok icon-white"></i>&nbsp;Save</button>
+						</div>
+					</div>
+					<h3 class="span2"><img src="resources/images/flags/{{match.away.icon}}"/>&nbsp;{{match.away.name}}</h3>
+				</div>
+			</div>
 	</script>
 
     <!-- Le javascript
@@ -132,7 +181,13 @@
     <script src="resources/assets/js/bootstrap-carousel.js"></script>
     <script src="resources/assets/js/bootstrap-typeahead.js"></script>
     <script src="resources/backbone/underscore-min.js"></script>
+    <script>
+    	_.templateSettings = {
+    	    interpolate: /\{\{(.+?)\}\}/g
+    	};
+    </script>
     <script src="resources/backbone/backbone-min.js"></script>
+    <script src="resources/app/PlayerMatch.js"></script>
     <script src="resources/euro.js"></script>
 
   </body>

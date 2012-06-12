@@ -43,14 +43,12 @@
             <span class="icon-bar"></span>
           </a>
           <a class="brand" href="#">Euro 2012</a>
-          <!-- 
           <div class="nav-collapse">
             <ul class="nav">
-              <li class="active"><a href="#">Home</a></li>
-              <li><a href="#about">About</a></li>
-              <li><a href="#contact">Contact</a></li>
+              <li class="active"><a href="console">Admin</a></li>
+              <li><a href="matches">Match</a></li>
             </ul>
-          </div> --><!--/.nav-collapse -->
+          </div><!--/.nav-collapse -->
         </div>
       </div>
     </div>
@@ -123,6 +121,7 @@
     <script src="../resources/assets/js/bootstrap-typeahead.js"></script>
     <script src="../resources/backbone/underscore-min.js"></script>
     <script src="../resources/backbone/backbone-min.js"></script>
+    <script src="../resources/app/Match.js"></script>
     <script src="../resources/euro-admin.js"></script>
 
   </body>

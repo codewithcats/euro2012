@@ -18,6 +18,9 @@ public class PlayerMatch {
 	@DBRef
 	private Round round;
 	
+	private PlayerPick playerOnePick;
+	private PlayerPick playerTwoPick;
+	
 	public String getId() {
 		return id;
 	}
@@ -47,5 +50,17 @@ public class PlayerMatch {
 	}
 	public void setRound(Round round) {
 		this.round = round;
+	}
+	public PlayerPick getPlayerOnePick() {
+		return playerOnePick;
+	}
+	public void setPlayerOnePick(PlayerPick playerOnePick) {
+		this.playerOnePick = playerOnePick;
+	}
+	public PlayerPick getPlayerTwoPick() {
+		return playerTwoPick;
+	}
+	public void setPlayerTwoPick(PlayerPick playerTwoPick) {
+		this.playerTwoPick = playerTwoPick;
 	}
 }

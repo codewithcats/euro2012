@@ -33,7 +33,7 @@
 	</logger>
 	
 	<logger name="org.springframework.data.mongodb">
-		<level value="debug" />
+		<level value="info" />
 	</logger>
 
 	<!-- Root Logger -->

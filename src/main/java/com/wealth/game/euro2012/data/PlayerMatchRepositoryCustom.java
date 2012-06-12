@@ -5,4 +5,5 @@ import java.util.List;
 public interface PlayerMatchRepositoryCustom {
 	
 	List<PlayerMatch> findByRoundId(String roundId);
+	List<PlayerMatch> findByPlayer(String playerId);
 }

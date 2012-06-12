@@ -8,6 +8,7 @@ public class Team {
 	@Id
 	private String id;
 	private String name;
+	private String icon;
 
 	public Team(String name) {
 		setName(name);
@@ -23,6 +24,14 @@ public class Team {
 
 	public String getName() {
 		return this.name;
+	}
+
+	public String getIcon() {
+		return icon;
+	}
+
+	public void setIcon(String icon) {
+		this.icon = icon;
 	}
 
 }

@@ -14,7 +14,8 @@
 	<!-- Enables the Spring MVC @Controller programming model -->
 	<annotation-driven />
 	<view-controller path="/" view-name="home"/>
-	<view-controller path="/admin/console" view-name="admin"/>
+	<view-controller path="/admin/console" view-name="admin/admin"/>
+	<view-controller path="/admin/matches" view-name="admin/matches"/>
 
 	<!-- Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources directory -->
 	<resources mapping="/resources/**" location="/resources/" />

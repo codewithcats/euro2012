@@ -1,0 +1,12 @@
+.container div#open-matches.active, .container div#closed-matches.active {
+	display: block;
+}
+#closed-matches, #open-matches {
+	display: none;
+}
+.container div#closed-matches h3 {
+	height: 60px;
+}
+.container div#closed-matches div ul li {
+	list-style: none;
+}

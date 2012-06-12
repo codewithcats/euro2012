@@ -1,8 +1,10 @@
 #reg {
 	display: none;
+	margin-top: 20px;
 }
 #signin {
 	display: none;
+	margin-top: 20px;
 }
 #signin-fail {
 	display: none;
@@ -11,5 +13,37 @@
 	display: none;
 }
 #user-info {
+	margin-bottom: 14px;
+}
+input.input-score {
+	width: 20px;
+}
+#player-matches .match {
 	border-bottom: 1px solid #DDD;
+	margin-bottom: 7px;
+}
+#player-matches .match .home {
+	text-align: right;
+}
+#player-matches .match .player-picks {
+	border-style: solid;
+	border-color: #DDD;
+	border-width: 0 5px;
+}
+#player-matches .match .player-picks form {
+	padding-left: 50px;
+}
+#player-matches .match .player-picks .form-actions {
+	text-align: center;
+	margin-bottom: 0;
+	position: relative;
+}
+#player-matches .match .player-picks .form-actions .alert {
+	position: absolute;
+	right: -292px;
+	top: 14px;
+}
+#player-matches .match .player-picks .form-actions .last-update {
+	display: block;
+	margin-bottom: 7px;
 }
