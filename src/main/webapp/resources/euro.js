@@ -84,6 +84,7 @@ $(function() {
 						return;
 					}
 					this.$el.append(alertTpl({
+						clazz: '',
 						title: 'Something Wrong!',
 						msg: 'Check your username, password, then try again.'
 					}));
@@ -107,12 +108,15 @@ $(function() {
 		},
 		render: function() {
 			this.$el.find('#user-info').html(this.userInfoTpl(this.model.toJSON()));
+			$('#dashboard-nav-link').show(0);
 			return this;
 		},
 		hide: function() {
+			$('#dashboard-nav-link').hide(0);
 			this.$el.hide(0);
 		},
 		show: function() {
+			$('#dashboard-nav-link').show(0);
 			this.$el.show(0);
 		},
 		signout: function(e) {
@@ -123,6 +127,7 @@ $(function() {
 				dataType: 'json',
 				success: function() {
 					this.model.clear('silent');
+					$('#dashboard-nav-link').hide(0);
 					this.trigger('logout'); 
 				}
 			});
@@ -152,6 +157,7 @@ $(function() {
 				model: this.user
 			});
 			this.dashboardView.on('logout', function() {
+				this.user = null;
 				this.navigate('signin', {trigger: true});
 			}, this);
 			
@@ -160,21 +166,38 @@ $(function() {
 			this.playerMatchListView = new PlayerMatchListView({
 				collection: this.playerMatchCollection
 			});
+			
+			this.playerMatchHistoryCollection = new PlayerMatchHistoryCollection;
+			this.playerMatchHistoryCollection.user = this.user;
+			this.playerMatchHistoryCollectionView = new HistoryMatchCollectionView({
+				collection: this.playerMatchHistoryCollection
+			});
+			
+			this.leagueRankingCollection = new LeagueRankingCollection;
+			this.leagueTableView = new LeagueTableView({
+				collection: this.leagueRankingCollection
+			});
+			this.leagueRankingCollection.fetch();
 		},
 		routes: {
 			'': 'dashboard',
-			//'register': 'register',
+			'register': 'register',
 			'signin': 'signIn',
-			'dashboard': 'dashboard'
+			'dashboard': 'dashboard',
+			'league': 'league'
+		},
+		league: function() {
+			$('div.content').hide(0);
+			$('#league').show(0);
 		},
 		dashboard: function() {
-			this.signInView.hide();
-			this.registerView.hide();
 			if(!this.user.get('username')) {
 				this.getCurrentUser();
 			} else {
+				$('div.content').hide(0);
 				this.dashboardView.show();
 				this.playerMatchCollection.fetch();
+				this.playerMatchHistoryCollection.fetch();
 			}
 		},
 		getCurrentUser: function() {
@@ -193,13 +216,11 @@ $(function() {
 			});
 		},
 		register: function() {
-			this.signInView.hide();
-			this.dashboardView.hide();
+			$('div.content').hide(0);
 			this.registerView.render();
 		},
 		signIn: function() {
-			this.registerView.hide();
-			this.dashboardView.hide();
+			$('div.content').hide(0);
 			this.signInView.render();
 		}
 	});

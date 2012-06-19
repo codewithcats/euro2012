@@ -34,29 +34,22 @@
 
   <body>
 
-    <div class="navbar navbar-fixed-top">
+    <div id="main-nav" class="navbar navbar-fixed-top">
       <div class="navbar-inner">
         <div class="container">
-          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </a>
           <a class="brand" href="#">Euro 2012</a>
-          <!-- 
           <div class="nav-collapse">
             <ul class="nav">
-              <li class="active"><a href="#">Home</a></li>
-              <li><a href="#about">About</a></li>
-              <li><a href="#contact">Contact</a></li>
+              <li id="dashboard-nav-link" class="active"><a href="#">Dashboard</a></li>
+              <li><a href="#league">League</a></li>
             </ul>
-          </div> --><!--/.nav-collapse -->
+          </div><!--/.nav-collapse -->
         </div>
       </div>
     </div>
 
     <div class="container">
-		<div id="reg">
+		<div id="reg" class="content">
 			<div class="row">
 				<div class="span2 offset3" style="text-align:right;">
 					<img src="resources/images/cup.png"/>
@@ -73,7 +66,7 @@
 				</form>
 			</div>
 		</div>
-		<div id="signin" class="row">
+		<div id="signin" class="row content">
 			<div class="span2 offset3" style="text-align:right;">
 				<img src="resources/images/cup.png"/>
 			</div>
@@ -86,12 +79,10 @@
 					<i class="icon icon-lock icon-white"></i>
 					&nbsp;Sign In
 				</button>
-				<!-- 
 				<button class="btn reg-trigger">
 					<i class="icon icon-user"></i>
 					&nbsp;Register
 				</button>
-				-->
 			</form>
 			<div id="signin-fail" class="span4 offset4 alert">
 				<button class="close" data-dismiss="alert">×</button>
@@ -99,16 +90,116 @@
   				<p>Check your username, password, then try again.</p>
 			</div>
 		</div>
-		<div id="dashboard">
+		<div id="dashboard" class="content">
 			<div id="user-info" class="page-header">
 			</div>
-			<div id="player-matches">
-				
+			<ul class="nav nav-tabs">
+				<li class="active"><a href="#player-matches" data-toggle="tab">Battles</a></li>
+				<li><a href="#history" data-toggle="tab">History</a></li>
+			</ul>
+			<div class="tab-content">
+				<div class="tab-pane active" id="player-matches">
+				</div>
+				<div class="tab-pane" id="history">
+					
+				</div>
+			</div>
+		</div>
+		<div id="league" class="content">
+			<div class="page-header">
+				<h1>League Information</h1>
+			</div>
+			<div class="row">
+				<table id="league-table" class="table table-striped span6">
+					<thead>
+						<tr>
+							<th>#</th>
+							<th><i class="icon icon-user"></i>&nbsp;Player</th>
+							<th>Game Points</th>
+							<th>League Points</th>
+						</tr>
+					</thead>
+					<tbody>
+						
+					</tbody>
+				</table>
 			</div>
 		</div>
     </div> <!-- /container -->
     
     <!-- Template -->
+    <script type="text/template" id="tpl-league-tr">
+			<td class="rank">{{rank}}</td>
+			<td class="player">{{player.username}}</td>
+			<td class="game-points">{{player.gamePoints}}pts</td>
+			<td class="league-points">{{player.leaguePoints}}pts</td>
+	</script>
+    <script type="text/template" id="tpl-history-match">
+			<div class="span4">
+				<h2>{{resultTag}}&nbsp;{{opponent.username}}&nbsp;{{mypick.points}} - {{opponentpick.points}}</h2>
+				<h3 class="home"><img src="resources/images/flags/{{match.home.icon}}"/>&nbsp;{{match.home.name}} vs {{match.away.name}}&nbsp;<img src="resources/images/flags/{{match.away.icon}}"/></h3>
+			</div>
+			<table class="table span8">
+				<thead>
+					<tr>
+						<th><i class="icon icon-th-list"></i></th>
+						<th><i class="icon icon-user"></i>&nbsp;{{me.username}}</th>
+						<th><i class="icon icon-globe"></i>&nbsp;Actual</th>
+						<th><i class="icon icon-user"></i>&nbsp;{{opponent.username}}</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>HT</td>
+						<td>{{mypick.htScore}}</td>
+						<td>{{match.htHomeScore}}-{{match.htAwayScore}}</td>
+						<td>{{opponentpick.htScore}}</td>
+					</tr>
+					<tr>
+						<td>FT</td>
+						<td>{{mypick.ftScore}}</td>
+						<td>{{match.ftHomeScore}}-{{match.ftAwayScore}}</td>
+						<td>{{opponentpick.ftScore}}</td>
+					</tr>
+					<tr>
+						<td>Yellow cards > 5</td>
+						<td>{{mypick.yellow}}</td>
+						<td>{{match.yellow}}</td>
+						<td>{{opponentpick.yellow}}</td>
+					</tr>
+					<tr>
+						<td>Red card</td>
+						<td>{{mypick.red}}</td>
+						<td>{{match.red}}</td>
+						<td>{{opponentpick.red}}</td>
+					</tr>
+					<tr>
+						<td>Own goal</td>
+						<td>{{mypick.og}}</td>
+						<td>{{match.og}}</td>
+						<td>{{opponentpick.og}}</td>
+					</tr>
+					<tr>
+						<td>Hattrick</td>
+						<td>{{mypick.hattrick}}</td>
+						<td>{{match.hattrick}}</td>
+						<td>{{opponentpick.hattrick}}</td>
+					</tr>
+					<tr>
+						<td><strong>Total Points</strong></td>
+						<td><strong>{{mypick.points}}</strong></td>
+						<td></td>
+						<td><strong>{{opponentpick.points}}</strong></td>
+					</tr>
+				</tbody>
+			</table>
+	</script>
+	<script type="text/template" id="tpl-history-match-by">
+		<div class="span4">
+			<h2>{{resultTag}}&nbsp;{{opponent.username}}&nbsp;(by default)</h2>
+			<h3 class="home"><img src="resources/images/flags/{{match.home.icon}}"/>&nbsp;{{match.home.name}} vs {{match.away.name}}&nbsp;<img src="resources/images/flags/{{match.away.icon}}"/></h3>
+		</div>
+	</script>
     <script type="text/template" id="tpl-round-header">
 		{{name}}
 	</script>
@@ -127,7 +218,7 @@
 	</script>
 	<script type="text/template" id="tpl-user-info">
 		<h1>{{username}}, {{leaguePoints}}pts
-			<small class="points"><span>(<a class="signout-trigger" title="click to sign out" href="#">sign out</a>)</span></small>
+			<small class="points">game point: {{gamePoints}}pts&nbsp;<span>(<a class="signout-trigger" title="click to sign out" href="#">sign out</a>)</span></small>
 		</h1>
 	</script>
 	<script type="text/template" id="tpl-match-row">
@@ -188,6 +279,7 @@
     </script>
     <script src="resources/backbone/backbone-min.js"></script>
     <script src="resources/app/PlayerMatch.js"></script>
+    <script src="resources/app/League.js"></script>
     <script src="resources/euro.js"></script>
 
   </body>

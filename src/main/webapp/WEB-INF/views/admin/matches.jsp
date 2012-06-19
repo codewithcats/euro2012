@@ -72,7 +72,7 @@
 				<ul class="span3">
 				</ul>
 				<div class="span3">
-					<button class="btn btn-primary close-trigger"><i class="icon icon-cog icon-white"></i>&nbsp;Process</button>
+					<button class="btn btn-primary process-trigger"><i class="icon icon-cog icon-white"></i>&nbsp;Process</button>
 				</div>
 			</div>
 		</div>

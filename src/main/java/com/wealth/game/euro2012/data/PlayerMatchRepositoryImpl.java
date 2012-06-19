@@ -25,4 +25,27 @@ public class PlayerMatchRepositoryImpl implements PlayerMatchRepositoryCustom {
 		return this.mongoOperations.find(query(criteria), PlayerMatch.class);
 	}
 
+	public List<PlayerMatch> findByMatchId(String matchId) {
+		ObjectId id = new ObjectId(matchId);
+		Criteria criteria = where("match.$id").is(id);
+		return this.mongoOperations.find(query(criteria), PlayerMatch.class);
+	}
+
+	public List<PlayerMatch> findByPlayerIdAndActiveRoundId(String playerId, String roundId) {
+		ObjectId rid = new ObjectId(roundId);
+		ObjectId pid = new ObjectId(playerId);
+		Criteria playerCriteria = (new Criteria()).orOperator(where("playerOne.$id").is(pid), where("playerTwo.$id").is(pid));
+		Criteria criteria = where("round.$id").is(rid).andOperator(playerCriteria);
+		return this.mongoOperations.find(query(criteria), PlayerMatch.class);
+	}
+
+	public List<PlayerMatch> findPlayerHistoryMatches(String playerId) {
+		Round activeRound = this.mongoOperations.findOne(query(where("active").is(true)), Round.class);
+		ObjectId pid = new ObjectId(playerId);
+		Criteria playerCriteria = (new Criteria()).orOperator(where("playerOne.$id").is(pid), where("playerTwo.$id").is(pid));
+		if(activeRound == null) return this.mongoOperations.find(query(playerCriteria), PlayerMatch.class);
+		Criteria criteria = where("round.$id").ne(new ObjectId(activeRound.getId())).andOperator(playerCriteria);
+		return this.mongoOperations.find(query(criteria), PlayerMatch.class);
+	}
+
 }

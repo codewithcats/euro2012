@@ -1,5 +1,8 @@
 package com.wealth.game.euro2012;
 
+import java.util.Iterator;
+import java.util.List;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +15,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.wealth.game.euro2012.data.LeagueStats;
+import com.wealth.game.euro2012.data.PlayerMatch;
+import com.wealth.game.euro2012.data.PlayerMatchRepository;
 import com.wealth.game.euro2012.data.User;
 import com.wealth.game.euro2012.data.UserRepository;
 
@@ -20,6 +26,7 @@ import com.wealth.game.euro2012.data.UserRepository;
 public class UserController {
 	
 	@Autowired private UserRepository userRepository;
+	@Autowired private PlayerMatchRepository playerMatchRepository;
 
 	@RequestMapping(value="/register", method={RequestMethod.POST})
 	@ResponseBody
@@ -84,6 +91,54 @@ public class UserController {
 	@ResponseBody
 	public String signout(HttpSession session) {
 		session.removeAttribute("user");
+		JsonObject json = new JsonObject();
+		json.addProperty("success", true);
+		return json.toString();
+	}
+	
+	@RequestMapping(value="/stats/cal", method=RequestMethod.POST)
+	@ResponseBody
+	public String calStats() {
+		Iterable<User> all = this.userRepository.findAll();
+		Iterator<User> it = all.iterator();
+		while(it.hasNext()) {
+			User user = it.next();
+			LeagueStats s = new LeagueStats();
+			List<PlayerMatch> playerMatches = this.playerMatchRepository.findPlayerHistoryMatches(user.getId());
+			int matchCount = playerMatches.size();
+			switch (matchCount) {
+			case 0:
+				user.setLeagueStats(s);
+				break;
+			case 1:
+				if(user.getLeaguePoints() == 0) {
+					s.set(0, 0, 1);
+				} else if(user.getLeaguePoints() == 1) {
+					s.set(0, 1, 0);
+				} else if(user.getLeaguePoints() == 3) {
+					s.set(1, 0, 0);
+				}
+				break;
+			case 2:
+				if(user.getLeaguePoints() == 0) {
+					s.set(0, 0, 2);
+				} else if(user.getLeaguePoints() == 1) {
+					s.set(0, 1, 1);
+				} else if(user.getLeaguePoints() == 2) {
+					s.set(0, 2, 0);
+				} else if(user.getLeaguePoints() == 3) {
+					s.set(1, 0, 1);
+				} else if(user.getLeaguePoints() == 4) {
+					s.set(1, 1, 0);
+				} else if(user.getLeaguePoints() == 6) {
+					s.set(2, 0, 0);
+				}
+			default:
+				break;
+			}
+			user.setLeagueStats(s);
+		}
+		this.userRepository.save(all);
 		JsonObject json = new JsonObject();
 		json.addProperty("success", true);
 		return json.toString();

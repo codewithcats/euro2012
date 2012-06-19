@@ -1,16 +1,19 @@
-#reg {
+.content {
 	display: none;
+}
+#dashboard-nav-link {
+	display: none;
+}
+#reg {
 	margin-top: 20px;
 }
 #signin {
-	display: none;
 	margin-top: 20px;
 }
 #signin-fail {
 	display: none;
 }
 #dashboard {
-	display: none;
 }
 #user-info {
 	margin-bottom: 14px;
@@ -46,4 +49,7 @@ input.input-score {
 #player-matches .match .player-picks .form-actions .last-update {
 	display: block;
 	margin-bottom: 7px;
+}
+#league table tr td.league-points, #league table tr td.player {
+	font-weight: bold;
 }

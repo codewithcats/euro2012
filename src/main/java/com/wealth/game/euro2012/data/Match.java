@@ -96,4 +96,23 @@ public class Match {
 		this.redCardHappen = redCardHappen;
 	}
 	
+	public MatchResult getHtResult() {
+		if(htHomeScore.compareTo(htAwayScore) > 0) return MatchResult.WIN;
+		else if(htHomeScore.compareTo(htAwayScore) == 0) return MatchResult.DRAW;
+		return MatchResult.LOSE;
+	}
+	
+	public MatchResult getFtResult() {
+		if(ftHomeScore.compareTo(ftAwayScore) > 0) return MatchResult.WIN;
+		else if(ftHomeScore.compareTo(ftAwayScore) == 0) return MatchResult.DRAW;
+		return MatchResult.LOSE;
+	}
+	
+	public String getHtScore() {
+		return htHomeScore.toString() + '-' + htAwayScore.toString();
+	}
+	public String getFtScore() {
+		return ftHomeScore.toString() + '-' + ftAwayScore.toString();
+	}
+	
 }

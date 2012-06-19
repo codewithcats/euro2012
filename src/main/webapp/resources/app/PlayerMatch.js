@@ -7,6 +7,11 @@ window.PlayerMatchCollection = Backbone.Collection.extend({
 		return 'league/players/' + this.user.get('id') + '/matches.json';
 	}
 });
+window.PlayerMatchHistoryCollection = Backbone.Collection.extend({
+	model: PlayerMatch,
+	url: 'league/players/history/matches.json'
+});
+
 window.PlayerMatchItemView = Backbone.View.extend({
 	tagName: 'div',
 	className: 'match',
@@ -21,11 +26,20 @@ window.PlayerMatchItemView = Backbone.View.extend({
 		e.preventDefault();
 		this.$el.find('.alert').remove();
 		var homeScoreHt = this.$el.find('input[name=homeScoreHt]').val();
+		var iHomeScoreHt = parseInt(homeScoreHt);
 		var awayScoreHt = this.$el.find('input[name=awayScoreHt]').val();
+		var iAwayScoreHt = parseInt(awayScoreHt);
 		var homeScoreFt = this.$el.find('input[name=homeScoreFt]').val();
+		var iHomeScoreFt = parseInt(homeScoreFt);
 		var awayScoreFt = this.$el.find('input[name=awayScoreFt]').val();
+		var iAwayScoreFt = parseInt(awayScoreFt);
 		var htResult = 'WIN';
+		if(iHomeScoreHt == iAwayScoreHt) htResult = 'DRAW';
+		else if(iHomeScoreHt < iAwayScoreHt) htResult = 'LOSE';
 		var ftResult = 'WIN';
+		if(iHomeScoreFt == iAwayScoreFt) ftResult = 'DRAW';
+		else if(iHomeScoreFt < iAwayScoreFt) ftResult = 'LOSE';
+		
 		var data = {
 			htScore: homeScoreHt + '-' + awayScoreHt,
 			ftScore: homeScoreFt + '-' + awayScoreFt,
@@ -109,6 +123,93 @@ window.PlayerMatchListView = Backbone.View.extend({
 				model: m,
 				user: this.collection.user,
 				index: index++
+			});
+			this.$el.append(item.render().el);
+		}, this);
+		return this;
+	}
+});
+window.HistoryMatchItemView = Backbone.View.extend({
+	tagName: 'div',
+	className: 'row history-match',
+	tpl: _.template($('#tpl-history-match').html()),
+	byDefaultTpl: _.template($('#tpl-history-match-by').html()),
+	initialize: function() {
+		this.model.on('change', this.render, this);
+	},
+	render: function() {
+		var model = this.model.toJSON();
+		var playerName = this.options.user.get('username');
+		if(playerName == model.playerOne.username) {
+			model.opponent = model.playerTwo;
+			model.me = model.playerOne;
+			model.opponentpick = model.playerTwoPick;
+			model.mypick = model.playerOnePick;
+			if(!model.mypick) {
+				model.resultTag = '<span style="color:red;">Lose</span>';
+				this.$el.append(this.byDefaultTpl(model));
+				return this;
+			} else if(!model.opponentpick) {
+				model.resultTag = '<span style="color:#51A351;">Win</span>';
+				this.$el.append(this.byDefaultTpl(model));
+				return this;
+			}
+			model.opponentpick.points = model.playerTwoPoints;
+			model.mypick.points = model.playerOnePoints;
+		} else {
+			model.opponent = model.playerOne;
+			model.me = model.playerTwo;
+			model.opponentpick = model.playerOnePick;
+			model.mypick = model.playerTwoPick;
+			if(!model.mypick) {
+				model.resultTag = '<span style="color:red;">Lose</span>';
+				this.$el.append(this.byDefaultTpl(model));
+				return this;
+			} else if(!model.opponentpick) {
+				model.resultTag = '<span style="color:#51A351;">Win</span>';
+				this.$el.append(this.byDefaultTpl(model));
+				return this;
+			}
+			model.opponentpick.points = model.playerOnePoints;
+			model.mypick.points = model.playerTwoPoints;
+		}
+		
+		if(model.mypick.points > model.opponentpick.points) model.resultTag = '<span style="color:#51A351;">Win</span>';
+		else if(model.mypick.points < model.opponentpick.points) model.resultTag = '<span style="color:red;">Lose</span>';
+		else model.resultTag = '<span style="color:#999;">Draw</span>';
+		
+		
+		model.match.yellow = model.match.yellowCardMoreThanFive?'Yes':'No' ;
+		model.mypick.yellow = model.mypick.yellowCardMoreThanFive?'Yes': 'No';
+		model.opponentpick.yellow = model.opponentpick.yellowCardMoreThanFive?'Yes': 'No';
+		
+		model.match.red = model.match.redCardHappen?'Yes':'No';
+		model.mypick.red = model.mypick.redCardHappen?'Yes':'No';
+		model.opponentpick.red = model.opponentpick.redCardHappen?'Yes':'No';
+		
+		model.match.og = model.match.ownGoalHappen?'Yes':'No';
+		model.mypick.og = model.mypick.ownGoalHappen?'Yes':'No';
+		model.opponentpick.og = model.opponentpick.ownGoalHappen?'Yes':'No';
+		
+		model.match.hattrick = model.match.hattrickHappen?'Yes':'No';
+		model.mypick.hattrick = model.mypick.hattrickHappen?'Yes':'No';
+		model.opponentpick.hattrick = model.opponentpick.hattrickHappen?'Yes':'No';
+		
+		this.$el.append(this.tpl(model));
+		return this;
+	}
+});
+window.HistoryMatchCollectionView = Backbone.View.extend({
+	el: '#history',
+	initialize: function() {
+		this.collection.on('reset', this.render, this);
+	},
+	render: function() {
+		this.$el.empty();
+		this.collection.each(function(pmatch){
+			var item = new HistoryMatchItemView({
+				model: pmatch,
+				user: this.collection.user
 			});
 			this.$el.append(item.render().el);
 		}, this);

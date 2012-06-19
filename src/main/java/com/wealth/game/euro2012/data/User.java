@@ -15,6 +15,8 @@ public class User {
 	private String password;
 	@Indexed
 	private int leaguePoints;
+	private int gamePoints;
+	private LeagueStats leagueStats;
 	
 	public String getId() {
 		return id;
@@ -39,5 +41,18 @@ public class User {
 	}
 	public void setLeaguePoints(int leaguePoints) {
 		this.leaguePoints = leaguePoints;
+	}
+	public int getGamePoints() {
+		return gamePoints;
+	}
+	public void setGamePoints(int gamePoints) {
+		this.gamePoints = gamePoints;
+	}
+	public LeagueStats getLeagueStats() {
+		if(this.leagueStats == null) this.leagueStats = new LeagueStats();
+		return leagueStats;
+	}
+	public void setLeagueStats(LeagueStats leagueStats) {
+		this.leagueStats = leagueStats;
 	}
 }

@@ -65,6 +65,27 @@ $(function() {
 	var ClosedMatchView = Backbone.View.extend({
 		tagName: 'div',
 		tpl: _.template($('#tpl-closed-match').html()),
+		events: {
+			'click button.process-trigger': 'process'
+		},
+		process: function(e) {
+			e.preventDefault();
+			$.ajax('../pmatches/cal', {
+				context: this,
+				type: 'POST',
+				dataType: 'json',
+				data: {
+					matchId: this.model.get('id')
+				},
+				success: function(json) {
+					if(json.success) alert('Finished!');
+					else alert('Failed!');
+				},
+				error: function() {
+					alert('Error!');
+				}
+			});
+		},
 		render: function() {
 			var html = this.tpl(this.model.toJSON());
 			this.$el.html(html);

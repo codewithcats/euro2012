@@ -19,7 +19,9 @@ public class PlayerMatch {
 	private Round round;
 	
 	private PlayerPick playerOnePick;
+	private int playerOnePoints;
 	private PlayerPick playerTwoPick;
+	private int playerTwoPoints;
 	
 	public String getId() {
 		return id;
@@ -62,5 +64,17 @@ public class PlayerMatch {
 	}
 	public void setPlayerTwoPick(PlayerPick playerTwoPick) {
 		this.playerTwoPick = playerTwoPick;
+	}
+	public int getPlayerOnePoints() {
+		return playerOnePoints;
+	}
+	public void setPlayerOnePoints(int playerOnePoints) {
+		this.playerOnePoints = playerOnePoints;
+	}
+	public int getPlayerTwoPoints() {
+		return playerTwoPoints;
+	}
+	public void setPlayerTwoPoints(int playerTwoPoints) {
+		this.playerTwoPoints = playerTwoPoints;
 	}
 }

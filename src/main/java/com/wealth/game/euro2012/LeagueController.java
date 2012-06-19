@@ -6,7 +6,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.domain.Sort.Order;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +21,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.wealth.game.euro2012.data.LeagueRankingItem;
+import com.wealth.game.euro2012.data.LeagueRankingItemRepository;
 import com.wealth.game.euro2012.data.Match;
 import com.wealth.game.euro2012.data.PlayerMatch;
 import com.wealth.game.euro2012.data.PlayerMatchRepository;
@@ -30,6 +37,7 @@ public class LeagueController {
 	@Autowired private RoundRepository roundRepository;
 	@Autowired private UserRepository userRepository;
 	@Autowired private PlayerMatchRepository playerMatchRepository;
+	@Autowired private LeagueRankingItemRepository leagueRankingItemRepository;
 	
 	@RequestMapping(value="/league/matching", method=RequestMethod.POST)
 	@ResponseBody
@@ -70,8 +78,33 @@ public class LeagueController {
 	@RequestMapping(value="/league/players/{id}/matches.json", method=RequestMethod.GET)
 	@ResponseBody
 	public String getPlayerMatches(@PathVariable String id) {
-		List<PlayerMatch> matches = this.playerMatchRepository.findByPlayer(id);
+		Round activeRound = this.roundRepository.getByActive(true);
+		if(activeRound == null) {
+			return "[]";
+		}
+		List<PlayerMatch> matches = this.playerMatchRepository.findByPlayerIdAndActiveRoundId(id, activeRound.getId());
 		return (new Gson()).toJson(matches);
+	}
+	
+	@RequestMapping(value="/league/players/history/matches.json", method=RequestMethod.GET)
+	@ResponseBody
+	public String getPlayerHistoryMatches(HttpSession session) {
+		User user = (User) session.getAttribute("user");
+		if(user == null) return "[]";
+		List<PlayerMatch> matches = this.playerMatchRepository.findPlayerHistoryMatches(user.getId());
+		return (new Gson()).toJson(matches);
+	}
+	
+	@RequestMapping(value="/league/table.json", method=RequestMethod.GET)
+	@ResponseBody
+	public String getTable() {
+		Order order = new Order(Direction.ASC, "rank");
+		Iterator<LeagueRankingItem> iterator = this.leagueRankingItemRepository.findAll(new Sort(order)).iterator();
+		List<LeagueRankingItem> items = new LinkedList<LeagueRankingItem>();
+		while(iterator.hasNext()) {
+			items.add(iterator.next());
+		}
+		return (new Gson()).toJson(items);
 	}
 
 }
