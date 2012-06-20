@@ -62,4 +62,23 @@ public class RoundController {
 		List<PlayerMatch> matches = this.playerMatchRepository.findByRoundId(id);
 		return (new Gson()).toJson(matches);
 	}
+	
+	@RequestMapping(value="/rounds/{id}/deactive", method=RequestMethod.POST)
+	@ResponseBody
+	public String deactiveRound(@PathVariable String id){
+		Round round = this.roundRepository.findOne(id);
+		round.setActive(false);
+		round = this.roundRepository.save(round);
+		return (new Gson()).toJson(round);
+	}
+	
+	@RequestMapping(value="/rounds/{id}/active", method=RequestMethod.POST)
+	@ResponseBody
+	public String activeRound(@PathVariable String id){
+		Round round = this.roundRepository.findOne(id);
+		round.setActive(true);
+		round = this.roundRepository.save(round);
+		return (new Gson()).toJson(round);
+	}
+	
 }
