@@ -1,12 +1,14 @@
 package com.wealth.game.euro2012;
 
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -143,4 +145,26 @@ public class UserController {
 		json.addProperty("success", true);
 		return json.toString();
 	}
+	
+	@RequestMapping(value="/user/{id}/changePassword", method=RequestMethod.POST)
+	@ResponseBody
+	public String changePassword(@PathVariable String id,@RequestParam String password){
+		User user = this.userRepository.findOne(id);
+		user.setPassword(password);
+		user = this.userRepository.save(user);
+		return (new Gson()).toJson(user);
+	}
+	
+	@RequestMapping(value="/all.json", method=RequestMethod.GET)
+	@ResponseBody
+	public String all() {
+		Iterator<User> it = userRepository.findAll().iterator();
+		List<User> users = new LinkedList<User>();
+		while(it.hasNext()) {
+			users.add(it.next());
+		}
+		
+		return (new Gson()).toJson(users);
+	}
+	
 }
