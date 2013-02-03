@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.wealth</groupId>
 	<artifactId>game</artifactId>
-	<name>Euro2012_pop_amp</name>
+	<name>Euro2012_pop_amp_pip</name>
 	<packaging>war</packaging>
 	<version>1.0.0-BUILD-SNAPSHOT</version>
 	<properties>
